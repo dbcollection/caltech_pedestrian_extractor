@@ -62,7 +62,7 @@ def read_seq(path):
                 s += 8
         imgs.append(I)
 
-    return imgs
+    return imgs, params['ext']
 
 
 def read_vbb(path):
@@ -93,7 +93,7 @@ def read_vbb(path):
     data['frames'] = defaultdict(list)
 
     for frame_id, obj in enumerate(objLists):
-        if len(obj) > 0:
+        if obj.shape[1] > 0:
             for id, pos, occl, lock, posv in zip(obj['id'][0],
                                                  obj['pos'][0],
                                                  obj['occl'][0],
@@ -126,11 +126,11 @@ def extract_images_video(data_path, save_path):
     Extract + convert .jpg images from .seq file.
     """
     # read images from file
-    imgs = read_seq(data_path)
+    imgs, ext = read_seq(data_path)
 
     # save images to file
     for idx, img in enumerate(imgs):
-        img_fname = "I{}.jpg".format(str(idx).zfill(5))
+        img_fname = "I{}.{}".format(str(idx).zfill(5), ext)
         img_path = os.path.join(save_path, img_fname)
         with open(img_path, 'wb+') as f:
             f.write(img)
@@ -153,14 +153,14 @@ def extract_annotations_video(data_path, save_path):
             raise IOError('Unable to open file: {}'.format(anno_path))
 
 
-def extract_files(data_path, save_path):
+def extract_files(data_path, save_path, sets):
     """
     Extract .seq and .vbb files to .jpg and .json.
     """
 
-    sets = ['set00', 'set01', 'set02', 'set03', 'set04',
-            'set05', 'set06', 'set07', 'set08', 'set09',
-            'set10']
+    sets = sets or ['set00', 'set01', 'set02', 'set03', 'set04',
+                    'set05', 'set06', 'set07', 'set08', 'set09',
+                    'set10']
 
     print('')
     print('==> Extract images + annotations from the Caltech Pedestrian Dataset...')
@@ -212,7 +212,7 @@ def extract_files(data_path, save_path):
     print('\n==> Extraction complete.')
 
 
-def extract_data(data_path, save_path):
+def extract_data(data_path, save_path, sets=None):
     """
     Main function
     """
@@ -224,7 +224,7 @@ def extract_data(data_path, save_path):
         os.makedirs(save_path)
 
     # extract images + annotations from .seq and .vbb files
-    extract_files(data_path, save_path)
+    extract_files(data_path, save_path, sets)
 
 
 if __name__ == '__main__':
