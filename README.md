@@ -34,7 +34,7 @@ python converter.py -data_path <path_to_data> -save_path <path_to_extract>
 
 # License
 
-MIT license (see the LICENSE file)
+Licensed under the [MIT](LICENSE) license.
 
 
 # Acknowledgements
