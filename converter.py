@@ -213,11 +213,31 @@ def extract_files(data_path, save_path, sets):
 
 
 def extract_data(data_path, save_path, sets=None):
-    """
-    Main function
+    """Extract image and annotation data from .vbb and .seq files.
+
+    Parameters
+    ----------
+    data_path : str
+        Directory path of data files.
+    save_path : str
+        Directory path to store the extracted data.
+    sets : str/list/tuple, optional
+        List of set names to extract.
+
+    Raises
+    ------
+    TypeError
+        If sets input arg is not a string, list or tuple.
     """
     assert os.path.exists(data_path), "Must provide a valid data path: {}".format(data_path)
     assert save_path, "Must provide a valid storage path: {}".format(save_path)
+    if sets:
+        if isinstance(sets, str):
+            sets = [sets]
+        elif isinstance(sets, tuple) or isinstance(sets, list):
+            sets = list(sets)
+        else:
+            raise TypeError('Invalid input type for \'sets\': {}.'.format(type(sets)))
 
     if not os.path.exists(save_path):
         print('> Saving extracted data to: {}'.format(save_path))
