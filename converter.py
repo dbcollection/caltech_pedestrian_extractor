@@ -31,10 +31,16 @@ def read_header(ifile):
     fps = struct.unpack('@d', ifile.read(8))
     ifile.read(432)
     image_ext = {100: 'raw', 102: 'jpg', 201: 'jpg', 1: 'png', 2: 'png'}
-    return {'w': params[0], 'h': params[1], 'bdepth': params[2],
-            'ext': image_ext[params[5]], 'format': params[5],
-            'size': params[4], 'true_size': params[8],
-            'num_frames': params[6]}
+    return {
+        'w': params[0],
+        'h': params[1],
+        'bdepth': params[2],
+        'ext': image_ext[params[5]],
+        'format': params[5],
+        'size': params[4],
+        'true_size': params[8],
+        'num_frames': params[6],
+    }
 
 
 def read_seq(path):
@@ -148,7 +154,11 @@ def extract_annotations_video(data_path, save_path):
         anno_path = os.path.join(save_path, anno_fname)
         try:
             with open(anno_path, 'w') as file_cache:
-                json.dump(data['frames'][i], file_cache, sort_keys=True, indent=4, ensure_ascii=False)
+                json.dump(data['frames'][i],
+                          file_cache,
+                          sort_keys=True,
+                          indent=4,
+                          ensure_ascii=False)
         except IOError:
             raise IOError('Unable to open file: {}'.format(anno_path))
 
@@ -178,7 +188,8 @@ def extract_files(data_path, save_path, sets):
         # check if dir exists
         assert os.path.exists(set_path), 'File does not exists: {}'.format(set_path)
 
-        print('\n> Extracting images+annotations from set: {} ({}/{})'.format(set_name, j+1, len(sets)))
+        print('\n> Extracting images + annotations from set: {} ({}/{})'
+              .format(set_name, j + 1, len(sets)))
 
         fnames = os.listdir(set_path)
         fnames = [fname for fname in fnames if fname.endswith('.seq')]
@@ -188,7 +199,8 @@ def extract_files(data_path, save_path, sets):
 
             video_name = os.path.splitext(video)[0]
 
-            print('>> Processing video: {}/{} ({}/{})'.format(set_name, video_name, i+1, len(fnames)))
+            print('>> Processing video: {}/{} ({}/{})'
+                  .format(set_name, video_name, i + 1, len(fnames)))
 
             video_path = os.path.join(set_path, video_name + '.seq')
             annot_path = os.path.join(set_path_annot, video_name + '.vbb')
