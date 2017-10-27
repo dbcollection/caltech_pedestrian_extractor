@@ -57,7 +57,7 @@ def read_seq(path):
     s = 1024
     for i in range(params['num_frames']):
         tmp = struct.unpack_from('@I', bytes[s:s + 4])[0]
-        I = bytes[s + 4:s + tmp]
+        img = bytes[s + 4:s + tmp]
         s += tmp + extra
         if i == 0:
             val = struct.unpack_from('@B', bytes[s:s + 1])[0]
@@ -66,7 +66,7 @@ def read_seq(path):
             else:
                 extra += 8
                 s += 8
-        imgs.append(I)
+        imgs.append(img)
 
     return imgs, params['ext']
 
