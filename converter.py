@@ -25,7 +25,7 @@ def read_header(ifile):
     norpix = ifile.read(24)
     version = struct.unpack('@i', ifile.read(4))
     length = struct.unpack('@i', ifile.read(4))
-    assert(length != 1024)
+    assert length != 1024
     descr = ifile.read(512)
     params = [struct.unpack('@i', ifile.read(4))[0] for i in range(9)]
     fps = struct.unpack('@d', ifile.read(8))
